@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        async function parallelDownload(tasks, maxConcurrent) {
+            let currentIndex = 0;
+            let completed = 0;
+            const results = [];
+
+            // 执行任务
+            const runTask = async () => {
+                while (currentIndex < tasks.length) {
+                    const taskIndex = currentIndex++;
+                    try {
+                        const result = await tasks[taskIndex]();
+                        results[taskIndex] = result;
+                    } catch (err) {
+                        results[taskIndex] = err;
+                    } finally {
+                        completed++;
+                        console.log(`进度: ${completed}/${tasks.length}`);
+                    }
+                }
+            };
+
+            // 启动 Workers
+            const workers = Array.from({ length: maxConcurrent }, () => {
+                console.log(33333);
+                return runTask()
+            });
+            await Promise.all(workers);
+            return results;
+        }
+        // 模拟 200 个下载请求
+        const totalTasks = Array.from({ length: 10 }, (_, i) => () =>
+            new Promise((resolve) => {
+                const delay = 500 + Math.random() * 2500;
+                setTimeout(() => {
+                    console.log(`文件 ${i + 1} 下载完成`);
+                    resolve();
+                }, 1000);
+            })
+        )
+
+        parallelDownload(totalTasks,5)
+    </script>
+</body>
+
+</html>

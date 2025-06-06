@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    </button>
+    <script>
+        let flag = true
+        Promise.prototype.withResolvers = function () {
+            let resolve, reject
+            const promise = new Promise((_resolve, _reject) => {
+                [resolve, reject] = [_resolve, _reject]
+            })
+
+            return { promise, resolve, reject }
+        }
+
+        const { promise, resolve, reject } = Promise.withResolvers()
+
+
+        promise.then(() => {
+            console.log('then');
+
+        })
+        promise.catch(() => {
+            console.log('reject');
+
+        })
+
+        flag ? resolve() : reject()
+    </script>
+</body>
+
+</html>
