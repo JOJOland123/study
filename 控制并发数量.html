@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+
+        function createPromise() {
+            return new Promise((resolve, reject) => {
+                const ms1 = Math.random() * 1000
+                const ms2 = Math.random() * 1000
+                if (ms1 > ms2) {
+                    setTimeout(() => {
+                        resolve(`我是resolve`)
+                    }, 1000);
+                } else {
+                    setTimeout(() => {
+                        reject('我是reject')
+                    }, 1000);
+                }
+            })
+        }
+        // 生成任务
+        const tasks = Array.from({ length: 100 }, () => () => createPromise())
+        async function controllerFn(tasks, maxCount) {
+            // 返回的数组
+            const result = []
+            // 当前的index
+            let currentIndex = 0
+            // 完成数量
+            let complate = 0
+            async function runTask() {
+                while (true) {
+                    const ind = currentIndex++
+                    if (ind >= tasks.length) break
+                    try {
+                        const data = await tasks[ind]()
+                        result[ind] = data
+                    } catch (error) {
+                        result[ind] = error
+
+                    } finally {
+                        complate++
+                        console.log(`完成第${complate}个`, result[ind]);
+
+                    }
+
+                }
+            }
+
+            const works = Array.from({ length: maxCount }, runTask)
+
+            await Promise.all(works)
+            return result
+
+
+        }
+
+
+        controllerFn(tasks, 6).then(res => {
+            console.log(res, 'ee');
+
+        })
+
+
+    </script>
+</body>
+
+</html>

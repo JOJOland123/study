@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        const flatData = [
+            { id: 1, name: '根节点', parentId: null },
+            { id: 2, name: '子节点1', parentId: 1 },
+            { id: 3, name: '子节点2', parentId: 1 },
+            { id: 4, name: '孙节点1-1', parentId: 2 },
+            { id: 5, name: '孙节点1-2', parentId: 2 },
+            { id: 6, name: '子节点3', parentId: null },
+            { id: 7, name: '孙节点3-1', parentId: 6 },
+            { id: 8, name: '孙节点3-1', parentId: 7 },
+            { id: 9, name: '孙节点3-1', parentId: 8 },
+            { id: 10, name: '44444444444444', parentId: 8 }
+        ]
+
+
+        // 第一种方法 推荐
+        function listToTree(arr) {
+            const mp = new Map()
+            const result = []
+
+            arr.forEach(item => {
+                mp.set(item.id, { ...item, children: [] })
+            })
+
+            arr.forEach(item => {
+                if (item.parentId) {
+                    const parent = mp.get(item.parentId)
+                    parent.children.push(mp.get(item.id))
+                } else {
+                    result.push(mp.get(item.id))
+                }
+            })
+
+            return result
+        }
+
+
+        // 第二种方法
+        function toTree(arr) {
+            function buildTree(parentId = null) {
+                return arr.filter(item => item.parentId === parentId)
+                    .map(ele => ({
+                        ...ele,
+                        children: buildTree(ele.id)
+                    }));
+            }
+            return buildTree();
+        }
+
+        
+        console.log(toTree(flatData));
+
+
+    </script>
+</body>
+
+</html>

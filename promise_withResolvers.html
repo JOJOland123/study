@@ -10,7 +10,7 @@
 <body>
     </button>
     <script>
-        let flag = true
+        let flag = false
         Promise.prototype.withResolvers = function () {
             let resolve, reject
             const promise = new Promise((_resolve, _reject) => {
