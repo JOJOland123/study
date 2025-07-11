@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        // 定义一个浅拷贝函数
+        // function shallowCopy(obj) {
+        //     const cloneObj = {}
+        //     for (let i in obj) {
+        //         if (obj.hasOwnProperty(i)) {
+        //             cloneObj[i] = obj[i]
+        //         }
+        //     }
+        //     return cloneObj
+        // }
+
+        // // 声明person
+        // let person = {
+        //     name: "张三",
+        //     hobbies: ["吃饭", "睡觉", "打豆豆"]
+        // }
+
+        // // 对person进行浅拷贝得到person1
+        // let person1 = shallowCopy(person)
+
+        // //修改值类型
+        // person1.name = '李四'
+
+        // //修改引用类型
+        // person1.hobbies[0] = '美女'
+
+        // console.log(person);
+        // console.log(person1);
+
+
+        // 深拷贝
+        function deepCopy(obj) {
+            //不是引用类型就不拷贝
+            if (!(obj instanceof Object)) return obj
+            //如果形参obj是数组，就创建数组，如果是对象就创建对象
+            let objCopy = obj instanceof Array ? [] : {}
+
+            for (let key in obj) {
+                if (obj instanceof Object) {
+                    objCopy[key] = deepCopy(obj[key])
+                } else {
+                    if (obj.hasOwnProperty(key)) {
+                        objCopy[key] = obj[key]
+                        
+                    }
+                }
+            }
+            return objCopy
+
+        }
+
+        const arr = [{ name: 'jojo' }]
+
+
+        const _arr = deepCopy(arr)
+
+
+    </script>
+</body>
+
+</html>
