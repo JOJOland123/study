@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        function initPromise() {
+            return new Promise((resolve, reject) => {
+                const num1 = Math.random() * 10000
+                const num2 = Math.random() * 10000
+                setTimeout(() => {
+                    if (num1 < num2) {
+                        resolve(`我是resolve`)
+                    } else {
+                        reject(`我是reject`)
+
+                    }
+                }, 1e3)
+
+            })
+        }
+
+        const tasks = Array.from({ length: 27 }, () => initPromise)
+
+        async function processControl(tasks, maxCount) {
+            // 声明一个返回的数组
+            const result = []
+            // 完成数
+            let completeNum = 0
+            // 当前正在进行的index
+            let currentIndex = 0
+
+            // 写一个控制单个并发的函数
+            async function process() {
+                while (true) {
+                    if (currentIndex >= tasks.length) {
+                        break
+                    }
+                    const index = currentIndex++
+                    // 获取当前正在进行的
+                    try {
+                        const res = await tasks[index]()
+                        result[index] = res
+                    } catch (error) {
+                        result[index] = error
+                    }
+                    finally {
+                        completeNum++
+                        console.log(`当前完成数量${completeNum}个`);
+                    }
+                }
+
+            }
+
+            const list = Array.from({ length: maxCount }, () => process())
+            await Promise.all(list)
+
+            return result
+
+        }
+
+        processControl(tasks, 3).then((res) => {
+            console.log(res);
+
+        })
+
+    </script>
+</body>
+
+</html>

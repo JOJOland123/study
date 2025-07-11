@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        const time = new Date().getTime()
+        function transformDate(timsp, type = 'YYYY-MM HH:mm') {
+            const date = new Date(timsp)
+            const year = date.getFullYear()
+            const month = `${date.getMonth() + 1}`.padStart(2, '0')
+            const day = `${date.getDay()}`.padStart(2, '0')
+            const hour = `${date.getHours()}`.padStart(2, '0')
+            const second = `${date.getSeconds()}`.padStart(2, '0')
+            const minute = `${date.getMinutes()}`.padStart(2, '0')
+            const map = {
+                'YYYY': year,
+                'MM': month,
+                'DD': day,
+                'HH': hour,
+                'mm': minute,
+                'ss': second
+            }
+            let result = type
+            for (const key in map) {
+                result = result.replace(key, map[key])
+            }
+
+            return result
+
+        }
+        console.log(transformDate(time));
+
+    </script>
+</body>
+
+</html>

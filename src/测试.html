@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <button id="btn1">
+        防抖
+    </button>
+    <button id="btn2">
+        节流
+    </button>
+    <script>
+        // 获取下标
+        // function getIndex(arr, num) {
+        //     const prevObj = {}
+        //     for (let i = 0; i < arr.length; i++) {
+        //         // 获取当前项
+        //         const element = arr[i];
+        //         // 获取目标项
+        //         const targetNum = num - element
+        //         // 获取目标项的下标
+        //         const targetNumIndex = prevObj[targetNum]
+        //         if (targetNumIndex !== undefined) {
+        //             return [targetNumIndex, i]
+        //         } else {
+        //             prevObj[element] = i
+        //         }
+
+        //     }
+        // }
+
+        // console.log(getIndex([2, 3, 4, 4], 8)); // [2,3]
+        // console.log(getIndex([2, 3, 4, 4], 5));// [0,1]
+        // console.log(getIndex([1, 1, 4, 4], 2));// [1,2]
+
+        // 树转列表  深度递归
+        // function treeToList(arr) {
+        //     return arr.reduce((all, pre) => {
+        //         all.push(pre)
+        //         if (pre.children?.length) {
+        //             all.push(...treeToList(pre.children))
+        //         }
+        //         return all
+        //     }, [])
+        // }
+
+        // // 树转列表  广度递归
+        // function treeToList(arr) {
+        //     const _arr = [...arr]
+        //     const res = []
+        //     while (_arr.length) {
+        //         const item = _arr.shift()
+        //         res.push(item)
+        //         if (item.children?.length) {
+        //             _arr.push(...item.children)
+        //         }
+
+        //     }
+        //     return res
+        // }
+
+
+        // console.log(treeToList([
+        //     {
+        //         id: 1,
+        //         name: '根节点',
+        //         parentId: null,
+        //         children: [
+        //             {
+        //                 id: 2,
+        //                 name: '子节点1',
+        //                 parentId: 1,
+        //                 children: [
+        //                     {
+        //                         id: 4,
+        //                         name: '子节点1-1',
+        //                         parentId: 2,
+        //                         children: []
+        //                     }
+        //                 ]
+        //             },
+        //             {
+        //                 id: 3,
+        //                 name: '子节点2',
+        //                 parentId: 1,
+        //                 children: []
+        //             }
+        //         ]
+        //     }
+        // ]));
+
+
+        // const btn1 = document.querySelector('#btn1')
+        // const btn2 = document.querySelector('#btn2')
+        // btn1.addEventListener('click', debounce(() => {
+        //     console.log('防抖');
+
+        // }, 1e3))
+        // btn2.addEventListener('click', throttle(() => {
+        //     console.log('节流');
+
+        // }, 5e3))
+        // // 防抖
+        // function debounce(fn, delay) {
+        //     let timer = null
+        //     return function (...args) {
+        //         clearTimeout(timer)
+        //         timer = setTimeout(() => {
+        //             fn.apply(this, args)
+        //         }, delay);
+        //     }
+        // }
+        // // 节流
+        // function throttle(fn, delay) {
+        //     let timer = null
+
+        //     return function (...args) {
+        //         if (!timer) {
+        //             timer = setTimeout(() => {
+        //                 fn.apply(this, args)
+        //                 timer = null
+        //             }, delay)
+        //         }
+        //     }
+        // }
+
+        // 控制并发数量
+        // 
+        function singlePromise() {
+            return new Promise((resolve, reject) => {
+                const n1 = Math.random() * 10000
+                const n2 = Math.random() * 10000
+                setTimeout(() => {
+                    if (n1 > n2) {
+                        resolve('我是resolve')
+                    } else {
+                        reject('我是reject')
+                    }
+                }, 1e3);
+
+            })
+        }
+
+        const tasks = Array.from({ length: 100 }, () => singlePromise)
+
+        async function controllerFn(list, maxCount) {
+            const result = []
+            let currentIndex = 0
+            let complateIndex = 0
+            async function process() {
+                while (true) {
+                    if (currentIndex >= list.length) break
+                    const index = currentIndex++
+                    try {
+                        const res = await list[index]()
+                        result[index] = res
+                    } catch (error) {
+                        result[index] = error
+                    } finally {
+                        complateIndex++
+                        console.log(`第${complateIndex}个`);
+
+                    }
+
+                }
+            }
+
+            const pro = Array.from({ length: maxCount }, () => process())
+            await Promise.all(pro)
+            return result
+        }
+        controllerFn(tasks, 5).then((res) => {
+            console.log(res);
+
+        })
+
+    </script>
+</body>
+
+</html>

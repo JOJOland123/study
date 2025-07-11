@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        const treeList = [
+            {
+                id: 1,
+                name: '根节点',
+                parentId: null,
+                children: [
+                    {
+                        id: 2,
+                        name: '子节点1',
+                        parentId: 1,
+                        children: [
+                            {
+                                id: 4,
+                                name: '子节点1-1',
+                                parentId: 2,
+                                children: []
+                            }
+                        ]
+                    },
+                    {
+                        id: 3,
+                        name: '子节点2',
+                        parentId: 1,
+                        children: []
+                    }
+                ]
+            }
+        ]
+
+        // 深度递归树转列表
+        function treeToList(arr) {
+            return arr.reduce((all, pre) => {
+                all.push(pre)
+                if (pre.children?.length) {
+                    all.push(...treeToList(pre.children))
+                }
+                return all
+            }, [])
+
+        }
+
+        // 广度递归树转列表
+        function treeToListBFS(arr) {
+            const _arr = [...arr]
+            const result = []
+            while (_arr.length) {
+                const item = _arr.shift()
+                result.push(item)
+                if (item.children?.length) {
+                    _arr.push(...item.children)
+                }
+
+            }
+            return result
+        }
+
+        function listToTree(arr) {
+            const result = []
+            const map = new Map()
+            arr.forEach((item) => {
+                map.set(item.id, { ...item, children: [] })
+            })
+
+            arr.forEach((item) => {
+                if (item.parentId) {
+                    const parent = map.get(item.parentId)
+                    parent.children.push(map.get(item.id))
+
+                } else {
+                    result.push(map.get(item.id))
+                }
+
+            })
+            return result
+        }
+
+        console.log(listToTree(treeToListBFS(treeList)));
+
+    </script>
+</body>
+
+</html>

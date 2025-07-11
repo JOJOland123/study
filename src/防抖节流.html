@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <button id="btn1">节流</button>
+    <button id="btn2">防抖</button>
+    <script>
+        const btn1 = document.querySelector('#btn1')
+        const btn2 = document.querySelector('#btn2')
+        btn1.addEventListener('click', throttle(() => {
+            console.log('我是节流');
+
+        }, 1e3))
+        btn2.addEventListener('click', decounce(() => {
+            console.log('我是防抖');
+
+        }, 1e3))
+
+        // 防抖
+        function throttle(fn, delay) {
+            let timer = null
+            return function (...args) {
+                if (!timer) {
+                    timer = setTimeout(() => {
+                        fn.apply(this, ...args)
+                        timer = null
+                    }, delay);
+                }
+
+            }
+        }
+        // 节流
+        function decounce(fn, delay) {
+            let timer = null
+            return function (...args) {
+                clearTimeout(timer)
+                timer = setTimeout(() => {
+                    fn.apply(this, ...args)
+                }, delay);
+            }
+
+        }
+    </script>
+</body>
+
+</html>

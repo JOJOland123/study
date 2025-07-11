@@ -5,5 +5,4 @@ const obj = {
 function isArray(arr){
     return Object.prototype.toString.call(arr).slice(8,0)
 }
-
 console.log(isArray(obj));
