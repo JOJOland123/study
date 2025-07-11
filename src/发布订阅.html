@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <button>点击发送</button>
+    <script>
+        class EventEmitter {
+            constructor() {
+                this.events = {}
+            }
+            on(eventName, fn) {
+                if (!this.events[eventName]) {
+                    this.events[eventName] = []
+                }
+                this.events[eventName].push(fn)
+            }
+            // 发布
+            emit(eventName, ...args) {
+                if (this.events[eventName]) {
+                    this.events[eventName].forEach(fn => fn(...args))
+                }
+            }
+            // 取消订阅
+            off(event, fn) {
+                if (this.events[event]) {
+                    this.events[event] = this.events[event].filter(f => f !== fn)
+                }
+            }
+        }
+        const bus = new EventEmitter()
+
+        const btn = document.querySelector('button')
+        let index = 0
+        btn.addEventListener('click', () => {
+            bus.emit('test', index++)
+
+
+        })
+
+        // 示例
+        function handler(data) {
+            console.log('收到消息:', data)
+        }
+        bus.on('test', handler)
+
+    </script>
+</body>
+
+</html>

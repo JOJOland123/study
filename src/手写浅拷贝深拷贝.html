@@ -40,30 +40,33 @@
 
 
         // 深拷贝
-        function deepCopy(obj) {
-            //不是引用类型就不拷贝
-            if (!(obj instanceof Object)) return obj
-            //如果形参obj是数组，就创建数组，如果是对象就创建对象
-            let objCopy = obj instanceof Array ? [] : {}
+        // function deepCopy(obj) {
+        //     //不是引用类型就不拷贝
+        //     if (!(obj instanceof Object)) return obj
+        //     //如果形参obj是数组，就创建数组，如果是对象就创建对象
+        //     let objCopy = obj instanceof Array ? [] : {}
 
-            for (let key in obj) {
-                if (obj instanceof Object) {
-                    objCopy[key] = deepCopy(obj[key])
-                } else {
-                    if (obj.hasOwnProperty(key)) {
-                        objCopy[key] = obj[key]
+        //     for (let key in obj) {
+        //         if (obj instanceof Object) {
+        //             objCopy[key] = deepCopy(obj[key])
+        //         } else {
+        //             if (obj.hasOwnProperty(key)) {
+        //                 objCopy[key] = obj[key]
                         
-                    }
-                }
-            }
-            return objCopy
+        //             }
+        //         }
+        //     }
+        //     return objCopy
 
-        }
+        // }
 
-        const arr = [{ name: 'jojo' }]
+        // const arr = [{ name: 'jojo' }]
 
 
-        const _arr = deepCopy(arr)
+        // const _arr = deepCopy(arr)
+
+
+        
 
 
     </script>
